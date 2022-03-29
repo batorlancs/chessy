@@ -15,6 +15,8 @@ public class MyFrame extends JFrame implements ActionListener {
     public Color lastBackground = color1;
     private int lastClicked = 0;
 
+    private ImageManager imageManager = new ImageManager();
+
     MyFrame() {
         initFrame();
     }
@@ -38,6 +40,8 @@ public class MyFrame extends JFrame implements ActionListener {
             buttons[i].setBorderPainted(false);
             buttons[i].setOpaque(true);
             buttons[i].addActionListener(this);
+            buttons[i].setVerticalAlignment(JButton.CENTER);
+            buttons[i].setHorizontalAlignment(JButton.CENTER);
             if ((i / 8) % 2 == 0) {
                 if (i % 8 % 2 == 0) buttons[i].setBackground(color1);
                 else buttons[i].setBackground(color2);
@@ -48,6 +52,8 @@ public class MyFrame extends JFrame implements ActionListener {
             panel.add(buttons[i]);
         }
 
+        //setting up buttons
+        buttons[0].setIcon(imageManager.getImage(0, false));
 
         //adding to panel
         this.add(panel);

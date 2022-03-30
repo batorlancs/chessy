@@ -9,6 +9,7 @@ public class ImageManager {
     private ImageIcon[] black = new ImageIcon[6];
     private final int imageScale = 85;
 
+    //////// CONSTRUCTOR ///////////
     public ImageManager() {
         init();
     }

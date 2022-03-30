@@ -16,6 +16,7 @@ public class MyFrame extends JFrame implements ActionListener {
     private int lastClicked = 0;
 
     private ImageManager imageManager = new ImageManager();
+    private Gameplay gameplay = new Gameplay();
 
     MyFrame() {
         initFrame();
@@ -53,13 +54,25 @@ public class MyFrame extends JFrame implements ActionListener {
         }
 
         //setting up buttons
-        buttons[0].setIcon(imageManager.getImage(0, false));
+        restartGame();
 
         //adding to panel
         this.add(panel);
 
         //set visible / last in contructor
         this.setVisible(true);
+    }
+
+    private void restartGame() {
+        refreshBoard();
+    }
+
+    private void refreshBoard() {
+        for (int i = 0; i < 64; i++) {
+            if (gameplay.isPieceThere(i)) {
+                buttons[i].setIcon(imageManager.getImage(gameplay.getPieceWhich(i), gameplay.isPieceWhite(i)));
+            }
+        }
     }
 
     @Override
@@ -71,6 +84,7 @@ public class MyFrame extends JFrame implements ActionListener {
                 lastBackground = buttons[i].getBackground();
                 buttons[i].setBackground(color3);
                 lastClicked = i;
+                System.out.println("click pos: " + i);
             }
         }
     }

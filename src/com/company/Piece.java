@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.HashSet;
+
 public class Piece {
 
     private int posx;
@@ -8,6 +10,9 @@ public class Piece {
     private int imageNum;
     private boolean isWhite;
     private boolean isAlive;
+    private boolean isFirstStepDone;
+    private HashSet<Integer> possSteps = new HashSet<Integer>();
+
 
     // UPDATES POSITION BASED ON POS X AND POS Y VALUES //
     private void updatePos() {
@@ -21,14 +26,32 @@ public class Piece {
         //System.out.println("posx: " + posx + ", posy: " + posy);
 
     }
-
-    public void move(int x, int y) {
+    public void move1(int pos) {
+        this.pos = pos;
+        if (!isFirstStepDone) isFirstStepDone = true;
+        updatePosxy();
+    }
+    public void move2(int x, int y) {
         this.posx = x;
         this.posy = y;
+        if (!isFirstStepDone) isFirstStepDone = true;
         updatePos();
     }
 
+    public void killPiece() {
+        setAlive(false);
+    }
+
     /////// getters, setters ////////
+
+    // POSS STEPS
+    public void setPossSteps(HashSet<Integer> set) {
+        possSteps = new HashSet<Integer>(set);
+    }
+
+    public HashSet<Integer> getPossSteps() {
+        return this.possSteps;
+    }
 
     // POS //
     public void setPos(int pos) {
@@ -85,5 +108,14 @@ public class Piece {
 
     public boolean isAlive() {
         return this.isAlive;
+    }
+
+    // IS PAWN //
+    public void setFirstStepDone(boolean isFirstStepDone) {
+        this.isFirstStepDone = isFirstStepDone;
+    }
+
+    public boolean isFirstStepDone() {
+        return this.isFirstStepDone;
     }
 }

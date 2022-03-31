@@ -5,14 +5,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import static com.company.Main.*;
+
 public class MyFrame extends JFrame implements ActionListener {
 
     private JPanel panel = new JPanel();
     private JButton[] buttons = new JButton[64];
-    public Color color1 = new Color(150, 181, 110);
-    public Color color2 = new Color(207, 214, 201);
-    public Color color3 = new Color(233, 87, 87);
-    public Color lastBackground = color1;
+
+    public Color[] colors = new Color[64];
+    public Color[] stepColors = new Color[64];
     private int lastClicked = 0;
 
     private ImageManager imageManager = new ImageManager();
@@ -44,11 +45,18 @@ public class MyFrame extends JFrame implements ActionListener {
             buttons[i].setVerticalAlignment(JButton.CENTER);
             buttons[i].setHorizontalAlignment(JButton.CENTER);
             if ((i / 8) % 2 == 0) {
-                if (i % 8 % 2 == 0) buttons[i].setBackground(color1);
-                else buttons[i].setBackground(color2);
+                if (i % 8 % 2 == 0) colors[i] = color1;
+                else colors[i] = color2;
             } else {
-                if (i % 8 % 2 == 1) buttons[i].setBackground(color1);
-                else buttons[i].setBackground(color2);
+                if (i % 8 % 2 == 1) colors[i] =  color1;
+                else colors[i] = color2;
+            }
+            if ((i / 8) % 2 == 0) {
+                if (i % 8 % 2 == 0) stepColors[i] = color4;
+                else stepColors[i] = color5;
+            } else {
+                if (i % 8 % 2 == 1) stepColors[i] =  color4;
+                else stepColors[i] = color5;
             }
             panel.add(buttons[i]);
         }
@@ -56,10 +64,13 @@ public class MyFrame extends JFrame implements ActionListener {
         //setting up buttons
         restartGame();
 
+        // gameplay
+        lastClicked = -1;
+
         //adding to panel
         this.add(panel);
 
-        //set visible / last in contructor
+        //set visible / last in constructor
         this.setVisible(true);
     }
 
@@ -71,7 +82,14 @@ public class MyFrame extends JFrame implements ActionListener {
         for (int i = 0; i < 64; i++) {
             if (gameplay.isPieceThere(i)) {
                 buttons[i].setIcon(imageManager.getImage(gameplay.getPieceWhich(i), gameplay.isPieceWhite(i)));
-            }
+            } else buttons[i].setIcon(null);
+        }
+        refreshColorBoard();
+    }
+
+    private void refreshColorBoard() {
+        for (int i = 0; i < 64; i++) {
+            buttons[i].setBackground(colors[i]);
         }
     }
 
@@ -80,11 +98,37 @@ public class MyFrame extends JFrame implements ActionListener {
         for (int i = 0; i < 64; i++) {
             //if you hit any in the thing
             if (e.getSource() == buttons[i]) {
-                buttons[lastClicked].setBackground(lastBackground);
-                lastBackground = buttons[i].getBackground();
-                buttons[i].setBackground(color3);
-                lastClicked = i;
-                System.out.println("click pos: " + i);
+
+                if (lastClicked != -1 && !gameplay.checkIfRightClick(i)) {
+                    if (buttons[i].getBackground() == stepColors[i]) {
+                        //kill if there is a figure
+                        if (gameplay.isEnemyPieceThere(i)) {
+                            gameplay.getPiece(i).killPiece();
+                        }
+                        gameplay.getPiece(lastClicked).move1(i);
+                        //refresh all arrays and stuff
+                        gameplay.refreshColorCheck();
+                        gameplay.refreshPieceCheck();
+                        gameplay.updateSteps();
+                        gameplay.switchTurn();
+                        gameplay.displayBoard();
+                    }
+                    refreshBoard();
+                    refreshColorBoard();
+                    lastClicked = -1;
+
+                } else {
+                    if (gameplay.checkIfRightClick(i)) {
+                        refreshColorBoard();
+                        buttons[i].setBackground(color3);
+                        lastClicked = i;
+                        gameplay.updateSteps();
+                        for (int num: gameplay.getPiece(i).getPossSteps()) {
+                            buttons[num].setBackground(stepColors[num]);
+                        }
+                    }
+                }
+                //System.out.println("click pos: " + i);
             }
         }
     }

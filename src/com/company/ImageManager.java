@@ -7,6 +7,9 @@ public class ImageManager {
 
     private ImageIcon[] white = new ImageIcon[6];
     private ImageIcon[] black = new ImageIcon[6];
+    private ImageIcon[] whiteAnim = new ImageIcon[6];
+    private ImageIcon[] blackAnim = new ImageIcon[6];
+    private ImageIcon step;
     private final int imageScale = 85;
 
     //////// CONSTRUCTOR ///////////
@@ -26,11 +29,34 @@ public class ImageManager {
             black[i] = new ImageIcon(getClass().getResource("/images/sticks/fekete" + i + ".png"));
             temp = black[i].getImage().getScaledInstance(imageScale, imageScale, Image.SCALE_SMOOTH);
             black[i] = new ImageIcon(temp);
+
+            //whiteAnim
+            whiteAnim[i] = new ImageIcon(getClass().getResource("/images/animations/feheranim" + i + ".png"));
+            temp = whiteAnim[i].getImage().getScaledInstance(imageScale, imageScale, Image.SCALE_SMOOTH);
+            whiteAnim[i] = new ImageIcon(temp);
+            //blackAnim
+            blackAnim[i] = new ImageIcon(getClass().getResource("/images/animations/feketeanim" + i + ".png"));
+            temp = blackAnim[i].getImage().getScaledInstance(imageScale, imageScale, Image.SCALE_SMOOTH);
+            blackAnim[i] = new ImageIcon(temp);
+            
         }
+
+        step = new ImageIcon(getClass().getResource("/images/animations/anim.png"));
+        temp = step.getImage().getScaledInstance(imageScale, imageScale, Image.SCALE_SMOOTH);
+        step = new ImageIcon(temp);
+
     }
 
     public ImageIcon getImage(int which, boolean isWhite) {
         if (isWhite) return white[which];
         else return black[which];
+    }
+
+    public ImageIcon getImageAnim(int which, boolean isWhite) {
+        if (which == -1) {
+            return step;
+        }
+        if (isWhite) return whiteAnim[which];
+        else return blackAnim[which];
     }
 }

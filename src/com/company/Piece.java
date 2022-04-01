@@ -1,5 +1,6 @@
 package com.company;
 
+import javax.swing.*;
 import java.util.HashSet;
 
 public class Piece {
@@ -12,6 +13,7 @@ public class Piece {
     private boolean isAlive;
     private boolean isFirstStepDone;
     private HashSet<Integer> possSteps = new HashSet<Integer>();
+    public PromoFrame promoFrame;
 
 
     // UPDATES POSITION BASED ON POS X AND POS Y VALUES //
@@ -40,6 +42,10 @@ public class Piece {
 
     public void killPiece() {
         setAlive(false);
+    }
+
+    public void promotion(boolean isWhite, int pos) {
+        promoFrame = new PromoFrame(isWhite, pos);
     }
 
     /////// getters, setters ////////

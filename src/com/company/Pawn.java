@@ -31,7 +31,7 @@ public class Pawn extends Piece {
             for (int i = getPosy() + 1; i < yy; i++) {
                 int p = com.company.Main.calcPos(getPosx(), i);
                 if (p < 0 || p > 63) break;
-                if (gp.isEnemyPieceThere(p)) break;
+                if (gp.isPieceThere(p)) break;
                 hset.add(p);
             }
             if (gp.isEnemyPieceThere(com.company.Main.calcPos(getPosx() -1 , getPosy() + 1))) {
@@ -50,7 +50,7 @@ public class Pawn extends Piece {
             for (int i = getPosy() - 1; i > yy; i--) {
                 int p = com.company.Main.calcPos(getPosx(), i);
                 if (p < 0 || p > 63) break;
-                if (gp.isEnemyPieceThere(p)) break;
+                if (gp.isPieceThere(p)) break;
                 hset.add(p);
             }
 

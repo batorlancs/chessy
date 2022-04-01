@@ -14,10 +14,11 @@ public class MyFrame extends JFrame implements ActionListener {
 
     public Color[] colors = new Color[64];
     public Color[] stepColors = new Color[64];
+    public Color[] lastColors = new Color[64];
     private int lastClicked = 0;
 
     private ImageManager imageManager = new ImageManager();
-    private Gameplay gameplay = new Gameplay();
+    private Gameplay gameplay;
 
     MyFrame() {
         initFrame();
@@ -29,6 +30,7 @@ public class MyFrame extends JFrame implements ActionListener {
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(null);
+        this.setResizable(false);
         this.setTitle("chess");
 
         //panel setup
@@ -44,24 +46,14 @@ public class MyFrame extends JFrame implements ActionListener {
             buttons[i].addActionListener(this);
             buttons[i].setVerticalAlignment(JButton.CENTER);
             buttons[i].setHorizontalAlignment(JButton.CENTER);
-            if ((i / 8) % 2 == 0) {
-                if (i % 8 % 2 == 0) colors[i] = color1;
-                else colors[i] = color2;
-            } else {
-                if (i % 8 % 2 == 1) colors[i] =  color1;
-                else colors[i] = color2;
-            }
-            if ((i / 8) % 2 == 0) {
-                if (i % 8 % 2 == 0) stepColors[i] = color4;
-                else stepColors[i] = color5;
-            } else {
-                if (i % 8 % 2 == 1) stepColors[i] =  color4;
-                else stepColors[i] = color5;
-            }
             panel.add(buttons[i]);
         }
 
-        //setting up buttons
+        fillColorBoard(colors, color1, color2);
+        fillColorBoard(stepColors, color4, color5);
+        fillColorBoard(lastColors, color6, color7);
+
+        //setting up buttons and colors
         restartGame();
 
         // gameplay
@@ -74,7 +66,20 @@ public class MyFrame extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
-    private void restartGame() {
+    private void fillColorBoard(Color[] arr, Color c1, Color c2) {
+        for (int i = 0; i < 64; i++) {
+            if ((i / 8) % 2 == 0) {
+                if (i % 8 % 2 == 0) arr[i] = c1;
+                else arr[i] = c2;
+            } else {
+                if (i % 8 % 2 == 1) arr[i] =  c1;
+                else arr[i] = c2;
+            }
+        }
+    }
+
+    public void restartGame() {
+        gameplay = new Gameplay();
         refreshBoard();
     }
 
@@ -91,6 +96,36 @@ public class MyFrame extends JFrame implements ActionListener {
         for (int i = 0; i < 64; i++) {
             buttons[i].setBackground(colors[i]);
         }
+    }
+
+    public void setButtonsEnabled(boolean x) {
+        for (JButton a: buttons) {
+            if (!x) a.setDisabledIcon(a.getIcon());
+            a.setEnabled(x);
+        }
+    }
+
+    private void checkIfPromotion(int index) {
+        if (gameplay.getPiece(index).getImageNum() == 0) {
+            int num;
+            if (com.company.Main.calcPosy(index) == 7 && gameplay.isPieceWhite(index)) {
+                gameplay.getPiece(index).promotion(true, index);
+            }
+            if (com.company.Main.calcPosy(index) == 0 && !gameplay.isPieceWhite(index)) {
+                gameplay.getPiece(index).promotion(false, index);
+            }
+        }
+    }
+
+    public void callPromotion(int index, int which, boolean isWhite) {
+        gameplay.createPromotion(index, which, isWhite);
+    }
+
+    public void refreshEverything() {
+        gameplay.refreshColorCheck();
+        gameplay.refreshPieceCheck();
+        refreshBoard();
+        refreshColorBoard();
     }
 
     @Override
@@ -112,24 +147,45 @@ public class MyFrame extends JFrame implements ActionListener {
                         gameplay.updateSteps();
                         gameplay.switchTurn();
                         gameplay.displayBoard();
+                        refreshBoard();
+                        buttons[lastClicked].setBackground(lastColors[lastClicked]);
+                        buttons[i].setBackground(lastColors[i]);
+                        lastClicked = -1;
+                        //check if promotion for pawn
+                        checkIfPromotion(i);
+                    } else {
+                        refreshBoard();
+//                      buttons[lastClicked].setBackground(lastColors[lastClicked]);
+//                      buttons[i].setBackground(lastColors[i]);
+                        lastClicked = -1;
                     }
-                    refreshBoard();
-                    refreshColorBoard();
-                    lastClicked = -1;
-
                 } else {
-                    if (gameplay.checkIfRightClick(i)) {
-                        refreshColorBoard();
-                        buttons[i].setBackground(color3);
+                    if (lastClicked == i) {
+                        lastClicked = -1;
+                        refreshBoard();
+                    }
+                    else if (gameplay.checkIfRightClick(i)) {
+                        refreshBoard();
+                        buttons[i].setBackground(stepColors[i]);
                         lastClicked = i;
                         gameplay.updateSteps();
                         for (int num: gameplay.getPiece(i).getPossSteps()) {
                             buttons[num].setBackground(stepColors[num]);
+                            buttons[num].setIcon(imageManager.getImageAnim(gameplay.getPieceWhich(num), gameplay.isPieceWhite(num)));
                         }
                     }
                 }
+
                 //System.out.println("click pos: " + i);
             }
+
         }
+
+        //check if game is over
+        if (gameplay.detectGameOver() != 0) {
+            this.setButtonsEnabled(false);
+            new EndFrame(gameplay.detectGameOver());
+        }
+
     }
 }

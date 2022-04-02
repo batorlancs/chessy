@@ -28,8 +28,9 @@ public class EndFrame extends JFrame implements ActionListener, MouseListener {
         label.setHorizontalAlignment(JLabel.CENTER);
         label.setVerticalAlignment(JLabel.CENTER);
         label.setOpaque(true);
-        label.setBackground(Main.fontcolor2);
-        label.setForeground(Main.fontcolor1);
+        //label.setBackground(Main.fontcolor2);
+        label.setBackground(Main.color1);
+        label.setForeground(Main.fontcolor2);
         label.setFont(Main.font2);
         if (winner == 1) label.setText("congratulations player white, you won!");
         else label.setText("congratulations player black, you won!");
@@ -49,8 +50,8 @@ public class EndFrame extends JFrame implements ActionListener, MouseListener {
         buttonExit.addActionListener(this);
         buttonExit.addMouseListener(this);
         buttonExit.setOpaque(true);
-        buttonExit.setBackground(Main.color2);
-        buttonExit.setForeground(Main.fontcolor1);
+        buttonExit.setBackground(Main.color1);
+        buttonExit.setForeground(Main.fontcolor2);
         buttonExit.setHorizontalAlignment(JButton.CENTER);
         buttonExit.setBorderPainted(false);
         buttonExit.setFont(Main.font2);
@@ -97,20 +98,28 @@ public class EndFrame extends JFrame implements ActionListener, MouseListener {
     @Override
     public void mouseEntered(MouseEvent e) {
         if (e.getSource() == buttonRestart) {
-            buttonRestart.setFont(Main.font1);
+            //buttonRestart.setFont(Main.font1);
+            buttonRestart.setForeground(Main.fontcolor1);
+            buttonRestart.setBackground(Main.color2);
         }
         if (e.getSource() == buttonExit) {
-            buttonExit.setFont(Main.font1);
+            //buttonExit.setFont(Main.font1);
+            buttonExit.setForeground(Main.fontcolor1);
+            buttonExit.setBackground(Main.color2);
         }
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == buttonRestart) {
-            buttonRestart.setFont(Main.font2);
+            //buttonRestart.setFont(Main.font2);
+            buttonRestart.setForeground(Main.fontcolor2);
+            buttonRestart.setBackground(Main.color1);
         }
         if (e.getSource() == buttonExit) {
-            buttonExit.setFont(Main.font2);
+            //buttonExit.setFont(Main.font2);
+            buttonExit.setForeground(Main.fontcolor2);
+            buttonExit.setBackground(Main.color1);
         }
     }
 }

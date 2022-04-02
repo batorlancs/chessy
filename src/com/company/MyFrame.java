@@ -145,6 +145,18 @@ public class MyFrame extends JFrame implements ActionListener {
         }
     }
 
+    private boolean clickedCastling(int indexLast, int index) {
+        if (lastClicked == -1) return false;
+        if (gameplay.getPieceWhich(indexLast) == 5) {
+            if (gameplay.getPieceWhich(index) == 1) {
+                if (!gameplay.isEnemyPieceThere(index) && !gameplay.getPiece(indexLast).isFirstStepDone()&& !gameplay.getPiece(index).isFirstStepDone())
+                    return true;
+                else
+                    return false;
+            } else return false;
+        } else return false;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         for (int i = 0; i < 64; i++) {
@@ -152,6 +164,7 @@ public class MyFrame extends JFrame implements ActionListener {
             if (e.getSource() == buttons[i]) {
 
                 if (lastClicked != -1 && !gameplay.checkIfRightClick(i)) {
+
                     if (buttons[i].getBackground() == stepColors[i]) {
                         //kill if there is a figure
                         if (gameplay.isEnemyPieceThere(i)) {
@@ -159,7 +172,22 @@ public class MyFrame extends JFrame implements ActionListener {
                         } else if (getPassantStep() == i) {
                             gameplay.getPiece(getPassant()).killPiece();
                         }
-                        gameplay.getPiece(lastClicked).move1(i);
+                        //castling
+//                        if (gameplay.getPieceWhich(lastClicked) == 5 && gameplay.getPieceWhich(i) == 1 && !gameplay.isEnemyPieceThere(i)) {
+//                            //move king two blocks
+//                            //move rook next to it
+//                            System.out.println("castling yeeeeeet");
+//                            if (calcPosx(lastClicked) < calcPosx(i)) {
+//                                int castPos = calcPos(calcPosx(lastClicked) - 2, calcPosy(lastClicked));
+//                                gameplay.getPiece(lastClicked).move1(castPos);
+//                                gameplay.getPiece(i).move2(calcPosx(castPos) + 1, calcPosy(castPos));
+//                            } else {
+//                                int castPos = calcPos(calcPosx(lastClicked) + 2, calcPosy(lastClicked));
+//                                gameplay.getPiece(lastClicked).move1(castPos);
+//                                gameplay.getPiece(i).move2(calcPosx(castPos) - 1, calcPosy(castPos));
+//                            }
+//                        } else
+                            gameplay.getPiece(lastClicked).move1(i);
                         //refresh all arrays and stuff
                         gameplay.refreshColorCheck();
                         gameplay.refreshPieceCheck();
@@ -177,6 +205,28 @@ public class MyFrame extends JFrame implements ActionListener {
                         refreshBoard();
                         lastClicked = -1;
                     }
+                } else if (clickedCastling(lastClicked, i)) {
+                    if (gameplay.getPieceWhich(lastClicked) == 5 && gameplay.getPieceWhich(i) == 1 && !gameplay.isEnemyPieceThere(i)) {
+                        //move king two blocks
+                        //move rook next to it
+                        if (calcPosx(lastClicked) > calcPosx(i)) {
+                            int castPos = calcPos(calcPosx(lastClicked) - 2, calcPosy(lastClicked));
+                            gameplay.getPiece(lastClicked).move1(castPos);
+                            gameplay.getPiece(i).move2(calcPosx(castPos) + 1, calcPosy(castPos));
+                        } else {
+                            int castPos = calcPos(calcPosx(lastClicked) + 2, calcPosy(lastClicked));
+                            gameplay.getPiece(lastClicked).move1(castPos);
+                            gameplay.getPiece(i).move2(calcPosx(castPos) - 1, calcPosy(castPos));
+                        }
+                    }
+                    refreshEverything();
+                    gameplay.updateSteps();
+                    gameplay.switchTurn();
+                    gameplay.displayBoard();
+                    refreshBoard();
+                    buttons[lastClicked].setBackground(lastColors[lastClicked]);
+                    buttons[i].setBackground(lastColors[i]);
+                    lastClicked = -1;
                 } else {
                     if (lastClicked == i) {
                         lastClicked = -1;
@@ -196,7 +246,6 @@ public class MyFrame extends JFrame implements ActionListener {
                 }
                 //System.out.println("click pos: " + i);
             }
-
         }
 
         //check if game is over

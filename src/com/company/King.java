@@ -28,6 +28,10 @@ public class King extends Piece {
         calcStepsDirection(gp, hset, 0, 1);
         calcStepsDirection(gp, hset, 0, -1);
 
+        System.out.println("--------------------");
+        castling(gp, hset, -1);
+        castling(gp, hset, 1);
+
         //-----------------------
         this.setPossSteps(hset);
         //-----------------------
@@ -41,5 +45,36 @@ public class King extends Piece {
             if (gp.isEnemyPieceThere(p) || !gp.isPieceThere(p))
                 hset.add(p);
         }
+    }
+
+    private void castling(Gameplay gp, HashSet<Integer> hset, int dir) {
+        int x = getPosx() + dir;
+        boolean space = true;
+        //check if king moved already
+        if (this.isFirstStepDone()) space = false;
+        // check if left rook moved already
+        if (dir < 0) {
+            if (gp.getPieceWhich(Main.calcPos(0, getPosy())) == 1) {
+                if (gp.getPiece(Main.calcPos(0, getPosy())).isFirstStepDone()) space = false;
+            } else {
+                space = false;
+            }
+        }
+        // check if right rook moved already
+        if (dir > 0) {
+            if (gp.getPieceWhich(Main.calcPos(7, getPosy())) == 1) {
+                if (gp.getPiece(Main.calcPos(7, getPosy())).isFirstStepDone()) space = false;
+            } else {
+                space = false;
+            }
+        }
+        while (x > 0 && x < 7) {
+            if (gp.isPieceThere(Main.calcPos(x, getPosy()))) {
+                space = false;
+            }
+            x += dir;
+        }
+
+        if (space) hset.add(Main.calcPos(x, getPosy()));
     }
 }

@@ -19,6 +19,8 @@ public class MyFrame extends JFrame implements ActionListener {
 
     private ImageManager imageManager = new ImageManager();
     private Gameplay gameplay;
+    private int passant = -1;
+    private int passantStep = -1;
 
     MyFrame() {
         initFrame();
@@ -128,6 +130,21 @@ public class MyFrame extends JFrame implements ActionListener {
         refreshColorBoard();
     }
 
+    private void checkIfPassant(int index) {
+        if (Math.abs(Main.calcPosy(lastClicked) - Main.calcPosy(index)) == 2) {
+            if (gameplay.getPiece(index).getImageNum() == 0) {
+                setPassant(index);
+                calcPassantStep(index);
+            } else {
+                setPassant(-1);
+                setPassantStep(-1);
+            }
+        } else {
+            setPassant(-1);
+            setPassantStep(-1);
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         for (int i = 0; i < 64; i++) {
@@ -139,6 +156,8 @@ public class MyFrame extends JFrame implements ActionListener {
                         //kill if there is a figure
                         if (gameplay.isEnemyPieceThere(i)) {
                             gameplay.getPiece(i).killPiece();
+                        } else if (getPassantStep() == i) {
+                            gameplay.getPiece(getPassant()).killPiece();
                         }
                         gameplay.getPiece(lastClicked).move1(i);
                         //refresh all arrays and stuff
@@ -150,13 +169,12 @@ public class MyFrame extends JFrame implements ActionListener {
                         refreshBoard();
                         buttons[lastClicked].setBackground(lastColors[lastClicked]);
                         buttons[i].setBackground(lastColors[i]);
+                        checkIfPassant(i);
                         lastClicked = -1;
                         //check if promotion for pawn
                         checkIfPromotion(i);
                     } else {
                         refreshBoard();
-//                      buttons[lastClicked].setBackground(lastColors[lastClicked]);
-//                      buttons[i].setBackground(lastColors[i]);
                         lastClicked = -1;
                     }
                 } else {
@@ -172,10 +190,10 @@ public class MyFrame extends JFrame implements ActionListener {
                         for (int num: gameplay.getPiece(i).getPossSteps()) {
                             buttons[num].setBackground(stepColors[num]);
                             buttons[num].setIcon(imageManager.getImageAnim(gameplay.getPieceWhich(num), gameplay.isPieceWhite(num)));
+                            if (num == getPassantStep() && getPassant() != -1) buttons[getPassant()].setIcon(imageManager.getImageAnim(gameplay.getPieceWhich(getPassant()), gameplay.isPieceWhite(getPassant())));
                         }
                     }
                 }
-
                 //System.out.println("click pos: " + i);
             }
 
@@ -187,5 +205,33 @@ public class MyFrame extends JFrame implements ActionListener {
             new EndFrame(gameplay.detectGameOver());
         }
 
+    }
+
+    // GETTERS SETTERS
+
+    public int getPassant() {
+        return passant;
+    }
+
+    public void setPassant(int num) {
+        this.passant = num;
+    }
+
+    public int getPassantStep() {
+        return this.passantStep;
+    }
+
+    public void setPassantStep(int num) {
+        this.passantStep = num;
+    }
+
+    private void calcPassantStep(int index) {
+        if (gameplay.getPiece(index).isWhite() && index < 55) {
+            setPassantStep(index+8);
+        } else if (!gameplay.getPiece(index).isWhite() && index > 7) {
+            setPassantStep(index-8);
+        } else {
+            setPassantStep(-1);
+        }
     }
 }

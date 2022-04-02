@@ -41,6 +41,9 @@ public class Pawn extends Piece {
                 hset.add(com.company.Main.calcPos(getPosx() + 1 , getPosy() + 1));
             }
 
+            //passant thing
+            passantCheck(hset, true);
+
         } else {
             int yy = getPosy() - 2;
             // first double the steps
@@ -61,10 +64,24 @@ public class Pawn extends Piece {
                 hset.add(com.company.Main.calcPos(getPosx() + 1 , getPosy() - 1));
             }
 
+            //passantCheck
+            passantCheck(hset, false);
+
         }
         //-----------------------
         this.setPossSteps(hset);
         //-----------------------
+    }
+
+    private void passantCheck(HashSet<Integer> hset, boolean isWhite) {
+        int x1 = getPosx();
+        int x2 = getPosx();
+        if (x1 > 0) x1--;
+        if (x2 < 7) x2++;
+        if (Main.frame.getPassant() == Main.calcPos(x1, getPosy()) || Main.frame.getPassant() == Main.calcPos(x2, getPosy())) {
+            if (Main.frame.getPassantStep() != -1)
+                hset.add(Main.frame.getPassantStep());
+        }
     }
 
 }

@@ -4,6 +4,9 @@ import java.util.HashSet;
 
 public class Rook extends Piece {
 
+    /////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTOR
+    /////////////////////////////////////////////////////////////////////////////////////////
     public Rook(int x, int y, boolean white) {
         initRook(x, y, white);
     }
@@ -16,7 +19,11 @@ public class Rook extends Piece {
         setImageNum(1);
         setWhite(white);
     }
+    /////////////////////////////////////////////////////////////////////////////////////////
 
+    // --------------------------------------------------------------------------------------
+    // calculate the possible steps for this piece
+    // --------------------------------------------------------------------------------------
     public void possibleSteps(Gameplay gp) {
         HashSet<Integer> hset = new HashSet<Integer>();
 
@@ -24,11 +31,16 @@ public class Rook extends Piece {
         calcStepsDirection(gp, hset, 0, -1); //down
         calcStepsDirection(gp, hset, -1, 0); //left
         calcStepsDirection(gp, hset, 1, 0); //right
+
+        //-----------------------
+        // put in piece class
         //-----------------------
         this.setPossSteps(hset);
-        //-----------------------
     }
 
+    // --------------------------------------------------------------------------------------
+    // calculate one direction (either up, down, left, or right)
+    // --------------------------------------------------------------------------------------
     private void calcStepsDirection(Gameplay gp, HashSet<Integer> hset, int addx, int addy) {
         int x = getPosx() + addx;
         int y = getPosy() + addy;

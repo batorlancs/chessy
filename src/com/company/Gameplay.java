@@ -4,11 +4,13 @@ import java.util.LinkedList;
 
 public class Gameplay {
 
+    // board, or gameplay checking
     private int[] pieceCheck = new int[64];
     private int[] colorCheck = new int[64];
     private boolean whiteTurn;
     private boolean isGameOver;
-    // PIECES
+
+    // normal pieces
     public Pawn whitePawns[] = new Pawn[8];
     public Pawn blackPawns[] = new Pawn[8];
     public Rook whiteRooks[] = new Rook[2];
@@ -34,6 +36,9 @@ public class Gameplay {
     //-----------------------//
 
 
+    /////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTOR
+    /////////////////////////////////////////////////////////////////////////////////////////
     public Gameplay() {
         initGameplay();
     }
@@ -45,16 +50,20 @@ public class Gameplay {
         whiteTurn = true;
         isGameOver = false;
         //display stuff
-        displayInt64Array(pieceCheck);
-        displayInt64Array(colorCheck);
+        displayBoard();
     }
+    /////////////////////////////////////////////////////////////////////////////////////////
 
+    // --------------------------------------------------------------------------------------
+    // initiate all pieces in their arrays
+    // --------------------------------------------------------------------------------------
     private void createPieces() {
+        // pawns
         for (int i = 0; i < 8; i++) {
             whitePawns[i] = new Pawn(i, 1, true);
             blackPawns[i] = new Pawn(i, 6, false);
-            //System.out.println("white: " + whitePawns[i].getPos() + ", black: " + blackPawns[i].getPos());
         }
+        // rooks, knights, bishops
         int f = 1;
         for (int i = 0; i < 2; i++) {
             whiteRooks[i] = new Rook(i*7,0, true);
@@ -65,30 +74,35 @@ public class Gameplay {
             blackBishops[i] = new Bishop(i*7+f*2, 7, false);
             f = -1;
         }
+        // queens
         whiteQueen = new Queen(3, 0, true);
         blackQueen = new Queen(3, 7, false);
+        // king
         whiteKing = new King(4, 0, true);
         blackKing = new King(4, 7, false);
     }
 
+    // --------------------------------------------------------------------------------------
+    // promote the piece in position (creating new piece in the correct color)
+    // --------------------------------------------------------------------------------------
     public void createPromotion(int pos, int imageNum, boolean isWhite) {
         getPiece(pos).killPiece();
         int x = com.company.Main.calcPosx(pos);
         int y = com.company.Main.calcPosy(pos);
         switch (imageNum) {
-            case 1:
+            case 1: // create rook
                 if (isWhite) whiteRookPromo.add(new Rook(x, y, true));
                 else blackRookPromo.add(new Rook(x, y, false));
                 break;
-            case 2:
+            case 2: // create knight
                 if (isWhite) whiteKnightPromo.add(new Knight(x, y, true));
                 else blackKnightPromo.add(new Knight(x, y, false));
                 break;
-            case 3:
+            case 3: // create bishop
                 if (isWhite) whiteBishopPromo.add(new Bishop(x, y, true));
                 else blackBishopPromo.add(new Bishop(x, y, false));
                 break;
-            case 4:
+            case 4: // create queen
                 if (isWhite) whiteQueenPromo.add(new Queen(x, y, true));
                 else blackQueenPromo.add(new Queen(x, y, false));
                 break;
@@ -97,6 +111,9 @@ public class Gameplay {
         refreshColorCheck();
     }
 
+    // --------------------------------------------------------------------------------------
+    // refresh piece array (indicating the kind) based on pos
+    // --------------------------------------------------------------------------------------
     public void refreshPieceCheck() {
         for (int i = 0; i < 64; i++) pieceCheck[i] = -1;
         //pawns
@@ -142,6 +159,9 @@ public class Gameplay {
         for (Queen a: blackQueenPromo) if (a.isAlive()) pieceCheck[a.getPos()] = a.getImageNum();
     }
 
+    // --------------------------------------------------------------------------------------
+    // refresh color array (indicating if piece is white or black) based on pos
+    // --------------------------------------------------------------------------------------
     public void refreshColorCheck() {
         for (int i = 0; i < 64; i++) colorCheck[i] = 0;
         //pawns
@@ -187,7 +207,9 @@ public class Gameplay {
         for (Queen a: blackQueenPromo) if (a.isAlive()) colorCheck[a.getPos()] = 2;
     }
 
-    // check if clicked button is appropriate
+    // --------------------------------------------------------------------------------------
+    // check if the player clicked on his own piece
+    // --------------------------------------------------------------------------------------
     public boolean checkIfRightClick(int index) {
         int check;
         if (whiteTurn) check = 1;
@@ -195,21 +217,29 @@ public class Gameplay {
         return check == colorCheck[index];
     }
 
+    // --------------------------------------------------------------------------------------
     // gives turn to the next player
+    // --------------------------------------------------------------------------------------
     public void switchTurn() {
         whiteTurn = !whiteTurn;
     }
 
+    // --------------------------------------------------------------------------------------
     public void displayBoard() {
         displayInt64Array(pieceCheck);
         displayInt64Array(colorCheck);
     }
 
+    // --------------------------------------------------------------------------------------
+    // checks if the position is in range
+    // --------------------------------------------------------------------------------------
     private boolean isInRange(int index) {
         return (index >=0 && index<=63);
     }
 
+    // --------------------------------------------------------------------------------------
     // for debugging
+    // --------------------------------------------------------------------------------------
     public void displayInt64Array(int[] arr) {
         System.out.print("-----------------------------------------");
         for (int i = 0; i < 64; i++) {
@@ -226,6 +256,9 @@ public class Gameplay {
         System.out.println("\n-----------------------------------------");
     }
 
+    // --------------------------------------------------------------------------------------
+    // get the piece in the current position
+    // --------------------------------------------------------------------------------------
     public Piece getPiece(int index) {
         //pawns
         for (int i = 0; i< 8 ; i++) {
@@ -258,6 +291,9 @@ public class Gameplay {
         return whitePawns[0];
     }
 
+    // --------------------------------------------------------------------------------------
+    // getting information about the piece in position
+    // --------------------------------------------------------------------------------------
     public boolean isEnemyPieceThere(int index) {
         if (!isInRange(index)) return false;
         if (whiteTurn && isPieceThere(index) && !isPieceWhite(index)) return true;
@@ -265,19 +301,25 @@ public class Gameplay {
         return false;
     }
 
+    // --------------------------------------------------------------------------------------
     public boolean isPieceThere(int index) {
         if (!isInRange(index)) return false;
         return pieceCheck[index] != -1;
     }
 
+    // --------------------------------------------------------------------------------------
     public int getPieceWhich(int index) {
         return pieceCheck[index];
     }
 
+    // --------------------------------------------------------------------------------------
     public boolean isPieceWhite(int index) {
         return colorCheck[index] == 1;
     }
 
+    // --------------------------------------------------------------------------------------
+    // updates the possible steps of all pieces
+    // --------------------------------------------------------------------------------------
     public void updateSteps() {
         //pawns
         for (int i = 0; i < 8; i++) {
@@ -310,12 +352,12 @@ public class Gameplay {
         for (Queen a: blackQueenPromo) a.possibleSteps(this);
     }
 
+    // --------------------------------------------------------------------------------------
+    // if game is done returns 1 or 2, if it is not returns 0
+    // --------------------------------------------------------------------------------------
     public int detectGameOver() {
-        // 0: game is not over
-        // 1: white won
-        // 2: black won
-        if (!whiteKing.isAlive()) return 2;
-        if (!blackKing.isAlive()) return 1;
-        return 0;
+        if (!whiteKing.isAlive()) return 2; // 2: black won
+        if (!blackKing.isAlive()) return 1; // 1: white won
+        return 0; // 0: game is not over
     }
 }

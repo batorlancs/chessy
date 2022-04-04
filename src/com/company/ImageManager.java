@@ -9,16 +9,18 @@ public class ImageManager {
     private ImageIcon[] black = new ImageIcon[6];
     private ImageIcon[] whiteAnim = new ImageIcon[6];
     private ImageIcon[] blackAnim = new ImageIcon[6];
-    private ImageIcon step;
-    private final int imageScale = 85;
+    private ImageIcon step; // possible step indicating circle
+    private final int imageScale = 85; // resizing
 
-    //////// CONSTRUCTOR ///////////
+    /////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTOR
+    /////////////////////////////////////////////////////////////////////////////////////////
     public ImageManager() {
         init();
     }
 
     private void init() {
-        // read in white sticks
+        // INPUT ALL IMAGE SOURCES AND RESIZE THEM
         Image temp;
         for (int i = 0; i < 6; i++) {
             //white
@@ -44,14 +46,21 @@ public class ImageManager {
         step = new ImageIcon(getClass().getResource("/images/animations/anim.png"));
         temp = step.getImage().getScaledInstance(imageScale, imageScale, Image.SCALE_SMOOTH);
         step = new ImageIcon(temp);
-
     }
+    /////////////////////////////////////////////////////////////////////////////////////////
 
+
+    // --------------------------------------------------------------------------------------
+    // get the correct image based on color and kind
+    // --------------------------------------------------------------------------------------
     public ImageIcon getImage(int which, boolean isWhite) {
         if (isWhite) return white[which];
         else return black[which];
     }
 
+    // --------------------------------------------------------------------------------------
+    // get the correct image animation based on color and kind
+    // --------------------------------------------------------------------------------------
     public ImageIcon getImageAnim(int which, boolean isWhite) {
         if (which == -1) {
             return step;

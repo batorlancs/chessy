@@ -3,6 +3,10 @@ package com.company;
 import java.util.HashSet;
 
 public class Queen extends Piece {
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTOR
+    /////////////////////////////////////////////////////////////////////////////////////////
     public Queen(int x, int y, boolean white) {
         initQueen(x, y, white);
     }
@@ -15,7 +19,11 @@ public class Queen extends Piece {
         setImageNum(4);
         setWhite(white);
     }
+    /////////////////////////////////////////////////////////////////////////////////////////
 
+    // --------------------------------------------------------------------------------------
+    // calculate the possible steps for this piece
+    // --------------------------------------------------------------------------------------
     public void possibleSteps(Gameplay gp) {
         HashSet<Integer> hset = new HashSet<Integer>();
 
@@ -29,10 +37,14 @@ public class Queen extends Piece {
         calcStepsDirection(gp, hset, 1, 0); //right
 
         //-----------------------
-        this.setPossSteps(hset);
+        // put in piece class
         //-----------------------
+        this.setPossSteps(hset);
     }
 
+    // --------------------------------------------------------------------------------------
+    // calculates the step in one direction
+    // --------------------------------------------------------------------------------------
     private void calcStepsDirection(Gameplay gp, HashSet<Integer> hset, int addx, int addy) {
         int x = getPosx() + addx;
         int y = getPosy() + addy;

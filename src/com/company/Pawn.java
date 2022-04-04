@@ -4,11 +4,12 @@ import java.util.HashSet;
 
 public class Pawn extends Piece {
 
-    ////// CONSTRUCTOR //////
+    /////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTOR
+    /////////////////////////////////////////////////////////////////////////////////////////
     public Pawn(int x, int y, boolean white) {
         initPawn(x, y, white);
     }
-
 
     private void initPawn(int x, int y, boolean white) {
         setFirstStepDone(false);
@@ -18,10 +19,15 @@ public class Pawn extends Piece {
         setImageNum(0);
         setWhite(white);
     }
+    /////////////////////////////////////////////////////////////////////////////////////////
 
+    // --------------------------------------------------------------------------------------
+    // calculate the possible steps of this piece
+    // --------------------------------------------------------------------------------------
     public void possibleSteps(Gameplay gp) {
         HashSet<Integer> hset = new HashSet<Integer>();
 
+        // white piece moving in their direction ---------------------------
         if (isWhite()) {
             int yy = getPosy() + 2;
             // first double the steps
@@ -34,6 +40,7 @@ public class Pawn extends Piece {
                 if (gp.isPieceThere(p)) break;
                 hset.add(p);
             }
+            // check if able to destroy enemy piece
             if (gp.isEnemyPieceThere(com.company.Main.calcPos(getPosx() -1 , getPosy() + 1))) {
                 hset.add(com.company.Main.calcPos(getPosx() -1 , getPosy() + 1));
             }
@@ -41,9 +48,10 @@ public class Pawn extends Piece {
                 hset.add(com.company.Main.calcPos(getPosx() + 1 , getPosy() + 1));
             }
 
-            //passant thing
+            // check if en passant is available
             passantCheck(hset, true);
 
+        // black piece moving the opposite way -----------------------------
         } else {
             int yy = getPosy() - 2;
             // first double the steps
@@ -56,7 +64,7 @@ public class Pawn extends Piece {
                 if (gp.isPieceThere(p)) break;
                 hset.add(p);
             }
-
+            // check if able to destroy enemy piece
             if (gp.isEnemyPieceThere(com.company.Main.calcPos(getPosx() -1 , getPosy() - 1))) {
                 hset.add(com.company.Main.calcPos(getPosx() -1 , getPosy() - 1));
             }
@@ -64,15 +72,19 @@ public class Pawn extends Piece {
                 hset.add(com.company.Main.calcPos(getPosx() + 1 , getPosy() - 1));
             }
 
-            //passantCheck
+            // check if en passant is available
             passantCheck(hset, false);
 
         }
-        //-----------------------
+        // -----------------------
+        // put in piece class
+        // -----------------------
         this.setPossSteps(hset);
-        //-----------------------
     }
 
+    // --------------------------------------------------------------------------------------
+    // en passant check
+    // --------------------------------------------------------------------------------------
     private void passantCheck(HashSet<Integer> hset, boolean isWhite) {
         int x1 = getPosx();
         int x2 = getPosx();

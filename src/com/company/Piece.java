@@ -8,49 +8,64 @@ public class Piece {
     private int posx;
     private int posy;
     private int pos;
-    private int imageNum;
+
+    private int imageNum; // 0:pawn, 1:rook, 2:knight, 3:bishop, 4:queen, 5:king
     private boolean isWhite;
     private boolean isAlive;
     private boolean isFirstStepDone;
-    private HashSet<Integer> possSteps = new HashSet<Integer>();
-    public PromoFrame promoFrame;
+    private HashSet<Integer> possSteps = new HashSet<Integer>(); //storing possible steps
 
-
-    // UPDATES POSITION BASED ON POS X AND POS Y VALUES //
+    // --------------------------------------------------------------------------------------
+    // updates pos based on x and y pos
+    // --------------------------------------------------------------------------------------
     private void updatePos() {
         pos = posx + (7-posy) * 8;
-        //System.out.println("piece pos: " + pos);
     }
 
+    // --------------------------------------------------------------------------------------
+    // updates x and y pos based on pos
+    // --------------------------------------------------------------------------------------
     private void updatePosxy() {
         posx = pos % 8;
         posy = 7 - (pos / 8);
-        //System.out.println("posx: " + posx + ", posy: " + posy);
 
     }
+
+    // --------------------------------------------------------------------------------------
+    // move to given pos
+    // --------------------------------------------------------------------------------------
     public void move1(int pos) {
         this.pos = pos;
         if (!isFirstStepDone) isFirstStepDone = true;
         updatePosxy();
     }
+
+    // --------------------------------------------------------------------------------------
+    // move to x and y pos
+    // --------------------------------------------------------------------------------------
     public void move2(int x, int y) {
         this.posx = x;
         this.posy = y;
         if (!isFirstStepDone) isFirstStepDone = true;
         updatePos();
     }
-
+    // --------------------------------------------------------------------------------------
     public void killPiece() {
         setAlive(false);
     }
 
+    // --------------------------------------------------------------------------------------
     public void promotion(boolean isWhite, int pos) {
-        promoFrame = new PromoFrame(isWhite, pos);
+        new PromoFrame(isWhite, pos);
     }
 
-    /////// getters, setters ////////
+    /////////////////////////////////////////////////////////////////////////////////////////
+    // GETTERS AND SETTERS
+    /////////////////////////////////////////////////////////////////////////////////////////
 
-    // POSS STEPS
+    // --------------------------------------------------------------------------------------
+    // possible steps
+    // --------------------------------------------------------------------------------------
     public void setPossSteps(HashSet<Integer> set) {
         possSteps = new HashSet<Integer>(set);
     }
@@ -59,7 +74,9 @@ public class Piece {
         return this.possSteps;
     }
 
-    // POS //
+    // --------------------------------------------------------------------------------------
+    // pos
+    // --------------------------------------------------------------------------------------
     public void setPos(int pos) {
         this.pos = pos;
         updatePosxy();
@@ -69,7 +86,9 @@ public class Piece {
         return this.pos;
     }
 
-    // POS X //
+    // --------------------------------------------------------------------------------------
+    // pos x
+    // --------------------------------------------------------------------------------------
     public void setPosx(int posx) {
         this.posx = posx;
         updatePos();
@@ -79,7 +98,9 @@ public class Piece {
         return this.posx;
     }
 
-    // POS Y //
+    // --------------------------------------------------------------------------------------
+    // pos y
+    // --------------------------------------------------------------------------------------
     public void setPosy(int posy) {
         this.posy = posy;
         updatePos();
@@ -89,7 +110,9 @@ public class Piece {
         return this.posy;
     }
 
-    // IMAGE NUM //
+    // --------------------------------------------------------------------------------------
+    // image num
+    // --------------------------------------------------------------------------------------
     public void setImageNum(int imageNum) {
         this.imageNum = imageNum;
     }
@@ -98,7 +121,9 @@ public class Piece {
         return this.imageNum;
     }
 
-    // IS WHITE //
+    // --------------------------------------------------------------------------------------
+    // is white
+    // --------------------------------------------------------------------------------------
     public void setWhite(boolean isWhite) {
         this.isWhite = isWhite;
     }
@@ -107,7 +132,9 @@ public class Piece {
         return this.isWhite;
     }
 
-    // IS ALIVE //
+    // --------------------------------------------------------------------------------------
+    // is alive
+    // --------------------------------------------------------------------------------------
     public void setAlive(boolean isAlive) {
         this.isAlive = isAlive;
     }
@@ -116,7 +143,9 @@ public class Piece {
         return this.isAlive;
     }
 
-    // IS PAWN //
+    // --------------------------------------------------------------------------------------
+    // is first step done
+    // --------------------------------------------------------------------------------------
     public void setFirstStepDone(boolean isFirstStepDone) {
         this.isFirstStepDone = isFirstStepDone;
     }
@@ -124,4 +153,5 @@ public class Piece {
     public boolean isFirstStepDone() {
         return this.isFirstStepDone;
     }
+    /////////////////////////////////////////////////////////////////////////////////////////
 }

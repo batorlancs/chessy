@@ -4,6 +4,9 @@ import java.util.HashSet;
 
 public class Knight extends Piece {
 
+    /////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTOR
+    /////////////////////////////////////////////////////////////////////////////////////////
     public Knight(int x, int y, boolean white) {
         initKnight(x, y, white);
     }
@@ -16,24 +19,32 @@ public class Knight extends Piece {
         setImageNum(2);
         setWhite(white);
     }
+    /////////////////////////////////////////////////////////////////////////////////////////
 
+    // --------------------------------------------------------------------------------------
+    // calculate the possible steps for this piece
+    // --------------------------------------------------------------------------------------
     public void possibleSteps(Gameplay gp) {
         HashSet<Integer> hset = new HashSet<Integer>();
 
-        calcStepsDirection(gp, hset, 1, 2);
-        calcStepsDirection(gp, hset, -1, 2);
-        calcStepsDirection(gp, hset, 1, -2);
-        calcStepsDirection(gp, hset, -1, -2);
-        calcStepsDirection(gp, hset, 2, 1);
-        calcStepsDirection(gp, hset, -2, 1);
-        calcStepsDirection(gp, hset, 2, -1);
-        calcStepsDirection(gp, hset, -2, -1);
+        calcStepsDirection(gp, hset, 1, 2); // x+1, y+2
+        calcStepsDirection(gp, hset, -1, 2); // x-1, y+2
+        calcStepsDirection(gp, hset, 1, -2); // x+1, x-2
+        calcStepsDirection(gp, hset, -1, -2); // x-1, x-2
+        calcStepsDirection(gp, hset, 2, 1); // x+2, y+1
+        calcStepsDirection(gp, hset, -2, 1); // x-2, y+1
+        calcStepsDirection(gp, hset, 2, -1); // x+2, y-1
+        calcStepsDirection(gp, hset, -2, -1); // x-2, y-1
 
+        //-----------------------
+        // put in piece class
         //-----------------------
         this.setPossSteps(hset);
-        //-----------------------
     }
 
+    // --------------------------------------------------------------------------------------
+    // calculate the position of a movement in one possible direction (l shapes)
+    // --------------------------------------------------------------------------------------
     private void calcStepsDirection(Gameplay gp, HashSet<Integer> hset, int addx, int addy) {
         int x = getPosx() + addx;
         int y = getPosy() + addy;

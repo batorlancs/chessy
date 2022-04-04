@@ -36,7 +36,6 @@ public class King extends Piece {
         calcStepsDirection(gp, hset, 0, 1); //up
         calcStepsDirection(gp, hset, 0, -1); //down
 
-        System.out.println("--------------------");
         castling(gp, hset, -1);
         castling(gp, hset, 1);
 

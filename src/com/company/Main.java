@@ -34,6 +34,14 @@ public class Main {
         return (7 - (pos / 8));
     }
 
+    public static int calcPosMouse() {
+        int x = (int) MouseInfo.getPointerInfo().getLocation().getX() - (int)frame.getLocationOnScreen().getX();
+        int y = (int) MouseInfo.getPointerInfo().getLocation().getY() - (int)frame.getLocationOnScreen().getY() - 28;
+        x /= 80;
+        y = 7 - (y/80);
+        return calcPos(x,  y);
+    }
+
     // MAIN FUNCTION ///////////
     public static void main(String[] args) {
         frame = new MyFrame();

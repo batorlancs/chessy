@@ -10,7 +10,9 @@ public class ImageManager {
     private ImageIcon[] whiteAnim = new ImageIcon[6];
     private ImageIcon[] blackAnim = new ImageIcon[6];
     private ImageIcon step; // possible step indicating circle
-    private final int imageScale = 85; // resizing
+    private ImageIcon[] passantAnim = new ImageIcon[2]; // animation for en passant
+    private ImageIcon[] castlingAnim = new ImageIcon[2]; // animation for castling
+    private final int imageScale = 80; // resizing
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -46,6 +48,18 @@ public class ImageManager {
         step = new ImageIcon(getClass().getResource("/images/animations/anim.png"));
         temp = step.getImage().getScaledInstance(imageScale, imageScale, Image.SCALE_SMOOTH);
         step = new ImageIcon(temp);
+
+        for (int i = 0; i < 2; i++) {
+            passantAnim[i] = new ImageIcon(getClass().getResource("/images/moreAnimations/passant" + i + ".png"));
+            temp = passantAnim[i].getImage().getScaledInstance(imageScale, imageScale, Image.SCALE_SMOOTH);
+            passantAnim[i] = new ImageIcon(temp);
+        }
+
+        for (int i = 0; i < 2; i++) {
+            castlingAnim[i] = new ImageIcon(getClass().getResource("/images/moreAnimations/castling" + i + ".png"));
+            temp = castlingAnim[i].getImage().getScaledInstance(imageScale, imageScale, Image.SCALE_SMOOTH);
+            castlingAnim[i] = new ImageIcon(temp);
+        }
     }
     /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -67,5 +81,21 @@ public class ImageManager {
         }
         if (isWhite) return whiteAnim[which];
         else return blackAnim[which];
+    }
+
+    // --------------------------------------------------------------------------------------
+    // get passant animation image
+    // --------------------------------------------------------------------------------------
+    public ImageIcon getImagePassant(boolean isWhite) {
+        if (isWhite) return passantAnim[0];
+        return passantAnim[1];
+    }
+
+    // --------------------------------------------------------------------------------------
+    // get castling animation image
+    // --------------------------------------------------------------------------------------
+    public ImageIcon getImageCastling(boolean isWhite) {
+        if (isWhite) return castlingAnim[0];
+        return castlingAnim[1];
     }
 }

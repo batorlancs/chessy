@@ -10,6 +10,8 @@ public class ImageManager {
     private ImageIcon[] whiteAnim = new ImageIcon[6];
     private ImageIcon[] blackAnim = new ImageIcon[6];
     private ImageIcon step; // possible step indicating circle
+    private ImageIcon square;
+    private ImageIcon square2;
     private ImageIcon[] passantAnim = new ImageIcon[2]; // animation for en passant
     private ImageIcon[] castlingAnim = new ImageIcon[2]; // animation for castling
     private final int imageScale = 80; // resizing
@@ -23,44 +25,48 @@ public class ImageManager {
 
     private void init() {
         // INPUT ALL IMAGE SOURCES AND RESIZE THEM
-        Image temp;
         for (int i = 0; i < 6; i++) {
             //white
             white[i] = new ImageIcon(getClass().getResource("/images/sticks/feher" + i + ".png"));
-            temp = white[i].getImage().getScaledInstance(imageScale, imageScale, Image.SCALE_SMOOTH);
-            white[i] = new ImageIcon(temp);
+            white[i] = resizeImage(white[i]);
             //black
             black[i] = new ImageIcon(getClass().getResource("/images/sticks/fekete" + i + ".png"));
-            temp = black[i].getImage().getScaledInstance(imageScale, imageScale, Image.SCALE_SMOOTH);
-            black[i] = new ImageIcon(temp);
+            black[i] = resizeImage(black[i]);
 
             //whiteAnim
             whiteAnim[i] = new ImageIcon(getClass().getResource("/images/animations/feheranim" + i + ".png"));
-            temp = whiteAnim[i].getImage().getScaledInstance(imageScale, imageScale, Image.SCALE_SMOOTH);
-            whiteAnim[i] = new ImageIcon(temp);
+            whiteAnim[i] = resizeImage(whiteAnim[i]);
             //blackAnim
             blackAnim[i] = new ImageIcon(getClass().getResource("/images/animations/feketeanim" + i + ".png"));
-            temp = blackAnim[i].getImage().getScaledInstance(imageScale, imageScale, Image.SCALE_SMOOTH);
-            blackAnim[i] = new ImageIcon(temp);
-            
+            blackAnim[i] = resizeImage(blackAnim[i]);
         }
 
         step = new ImageIcon(getClass().getResource("/images/animations/anim.png"));
-        temp = step.getImage().getScaledInstance(imageScale, imageScale, Image.SCALE_SMOOTH);
-        step = new ImageIcon(temp);
+        step = resizeImage(step);
+
+        square = new ImageIcon(getClass().getResource("/images/animations/stickanim.png"));
+        square = resizeImage(square);
+
+        square2 = new ImageIcon(getClass().getResource("/images/animations/stickanim2.png"));
+        square2 = resizeImage(square2);
 
         for (int i = 0; i < 2; i++) {
             passantAnim[i] = new ImageIcon(getClass().getResource("/images/moreAnimations/passant" + i + ".png"));
-            temp = passantAnim[i].getImage().getScaledInstance(imageScale, imageScale, Image.SCALE_SMOOTH);
-            passantAnim[i] = new ImageIcon(temp);
+            passantAnim[i] = resizeImage(passantAnim[i]);
         }
 
         for (int i = 0; i < 2; i++) {
             castlingAnim[i] = new ImageIcon(getClass().getResource("/images/moreAnimations/castling" + i + ".png"));
-            temp = castlingAnim[i].getImage().getScaledInstance(imageScale, imageScale, Image.SCALE_SMOOTH);
-            castlingAnim[i] = new ImageIcon(temp);
+            castlingAnim[i] = resizeImage(castlingAnim[i]);
         }
     }
+
+    private ImageIcon resizeImage(ImageIcon im) {
+        Image temp = im.getImage().getScaledInstance(imageScale, imageScale, Image.SCALE_SMOOTH);
+        ImageIcon newIm = new ImageIcon(temp);
+        return newIm;
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -97,5 +103,12 @@ public class ImageManager {
     public ImageIcon getImageCastling(boolean isWhite) {
         if (isWhite) return castlingAnim[0];
         return castlingAnim[1];
+    }
+
+    // --------------------------------------------------------------------------------------
+    // get castling animation image
+    // --------------------------------------------------------------------------------------
+    public ImageIcon getImageSquare() {
+        return square;
     }
 }

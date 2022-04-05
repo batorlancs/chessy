@@ -45,7 +45,7 @@ public class EndFrame extends JFrame implements ActionListener, MouseListener {
         buttonRestart.addMouseListener(this);
         buttonRestart.setOpaque(true);
         buttonRestart.setBackground(Main.color1);
-        buttonRestart.setForeground(Main.fontcolor2);
+        buttonRestart.setForeground(Main.color2);
         buttonRestart.setFont(Main.font2);
         buttonRestart.setHorizontalAlignment(JButton.CENTER);
         buttonRestart.setBorderPainted(false);
@@ -56,7 +56,7 @@ public class EndFrame extends JFrame implements ActionListener, MouseListener {
         buttonExit.addMouseListener(this);
         buttonExit.setOpaque(true);
         buttonExit.setBackground(Main.color1);
-        buttonExit.setForeground(Main.fontcolor2);
+        buttonExit.setForeground(Main.color2);
         buttonExit.setFont(Main.font2);
         buttonExit.setHorizontalAlignment(JButton.CENTER);
         buttonExit.setBorderPainted(false);
@@ -123,11 +123,11 @@ public class EndFrame extends JFrame implements ActionListener, MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == buttonRestart) {
-            buttonRestart.setForeground(Main.fontcolor2);
+            buttonRestart.setForeground(Main.color2);
             buttonRestart.setBackground(Main.color1);
         }
         if (e.getSource() == buttonExit) {
-            buttonExit.setForeground(Main.fontcolor2);
+            buttonExit.setForeground(Main.color2);
             buttonExit.setBackground(Main.color1);
         }
     }

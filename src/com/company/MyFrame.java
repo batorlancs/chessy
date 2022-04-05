@@ -6,13 +6,14 @@ import java.awt.event.*;
 
 import static com.company.Main.*;
 
-public class MyFrame extends JFrame implements MouseListener, MouseMotionListener {
+public class MyFrame extends JFrame implements MouseListener, MouseMotionListener, KeyListener {
 
     // gui
     private JPanel panel = new JPanel();
     //private JButton[] buttons = new JButton[64];
     private JLabel[] buttons = new JLabel[64];
     private JLabel labelDrag = new JLabel();
+    private JLabel labelSquare = new JLabel();
     private boolean isDragging = false;
     private int whichButton = 0;
     private boolean otherWindowisOpen = false;
@@ -43,6 +44,7 @@ public class MyFrame extends JFrame implements MouseListener, MouseMotionListene
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(null);
         this.setResizable(false);
+        this.addKeyListener(this);
         this.setTitle("chess");
 
         //panel setup
@@ -72,6 +74,12 @@ public class MyFrame extends JFrame implements MouseListener, MouseMotionListene
         labelDrag.setHorizontalAlignment(JLabel.CENTER);
         labelDrag.setVisible(false);
 
+        // square anim setup
+        labelSquare.setSize(80, 80);
+        labelSquare.setOpaque(false);
+        labelSquare.setVerticalAlignment(JLabel.CENTER);
+        labelSquare.setHorizontalAlignment(JLabel.CENTER);
+        labelSquare.setVisible(false);
 
         // fill up arrays with the correct chess color pattern
         fillColorBoard(colors, color1, color2);
@@ -86,6 +94,7 @@ public class MyFrame extends JFrame implements MouseListener, MouseMotionListene
 
         //adding to frame
         this.add(labelDrag);
+        this.add(labelSquare);
         this.add(panel);
 
 
@@ -331,7 +340,6 @@ public class MyFrame extends JFrame implements MouseListener, MouseMotionListene
     @Override
     public void mousePressed(MouseEvent e) {
         if (!otherWindowisOpen) {
-            System.out.println("clicked");
             for (int i = 0; i < 64; i++) {
                 if (e.getSource() == buttons[i]) {
                     // --------------------------------------------------------------------------
@@ -340,6 +348,9 @@ public class MyFrame extends JFrame implements MouseListener, MouseMotionListene
                     if (gameplay.checkIfRightClick(i)) {
                         labelDrag.setIcon(buttons[i].getIcon());
                         labelDrag.setVisible(true);
+                        labelSquare.setBounds(buttons[i].getBounds());
+                        labelSquare.setIcon(imageManager.getImageSquare());
+                        labelSquare.setVisible(true);
                         whichButton = i;
                         isDragging = true;
                         labelDrag.setBounds(e.getX() + buttons[whichButton].getX() - 40, e.getY() + buttons[whichButton].getY() - 40, 80, 80);
@@ -415,12 +426,9 @@ public class MyFrame extends JFrame implements MouseListener, MouseMotionListene
             int i = calcPosMouse();
 
             if (isDragging) {
-                System.out.println("released");
                 isDragging = false;
                 labelDrag.setVisible(false);
             }
-
-            System.out.println(lastClicked + ", " + i);
 
             // --------------------------------------------------------------------------
             // if last click was a piece and current click is not a friendly piece
@@ -507,11 +515,21 @@ public class MyFrame extends JFrame implements MouseListener, MouseMotionListene
             }
         }
 
+        // disable labelSquare
+        labelSquare.setVisible(false);
+
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-
+        for (int i = 0; i < 64; i++) {
+            if (e.getSource() == buttons[i]) {
+                if (isDragging) {
+                    labelSquare.setIcon(imageManager.getImageSquare());
+                    labelSquare.setBounds(buttons[i].getBounds());
+                }
+            }
+        }
     }
 
     @Override
@@ -531,6 +549,69 @@ public class MyFrame extends JFrame implements MouseListener, MouseMotionListene
     @Override
     public void mouseMoved(MouseEvent e) {
 
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (!otherWindowisOpen) {
+            if (e.getKeyCode() == KeyEvent.VK_0) {
+                changeTheme(0);
+                repaintBoard();
+                fillColorBoard(colors, color1, color2);
+                fillColorBoard(stepColors, color4, color5);
+                fillColorBoard(lastColors, color6, color7);
+                updateColorTheme();
+            } else if (e.getKeyCode() == KeyEvent.VK_1) {
+                changeTheme(1);
+                repaintBoard();
+                fillColorBoard(colors, color1, color2);
+                fillColorBoard(stepColors, color4, color5);
+                fillColorBoard(lastColors, color6, color7);
+                updateColorTheme();
+            } else if (e.getKeyCode() == KeyEvent.VK_2) {
+                changeTheme(2);
+                repaintBoard();
+                fillColorBoard(colors, color1, color2);
+                fillColorBoard(stepColors, color4, color5);
+                fillColorBoard(lastColors, color6, color7);
+                updateColorTheme();
+            } else if (e.getKeyCode() == KeyEvent.VK_3) {
+                changeTheme(3);
+                repaintBoard();
+                fillColorBoard(colors, color1, color2);
+                fillColorBoard(stepColors, color4, color5);
+                fillColorBoard(lastColors, color6, color7);
+                updateColorTheme();
+            }
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+
+    private void repaintBoard() {
+        Color color;
+        for (int i = 0; i < 64; i++) {
+            if (buttons[i].getBackground() == colorTheme[0]) color = color1;
+            else if (buttons[i].getBackground() == colorTheme[1]) color = color2;
+            else if (buttons[i].getBackground() == colorTheme[2]) color = color3;
+            else if (buttons[i].getBackground() == colorTheme[3]) color = color4;
+            else if (buttons[i].getBackground() == colorTheme[4]) color = color5;
+            else if (buttons[i].getBackground() == colorTheme[5]) color = color6;
+            else if (buttons[i].getBackground() == colorTheme[6]) color = color7;
+            else color = color1;
+            buttons[i].setBackground(color);
+        }
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -556,6 +637,8 @@ public class MyFrame extends JFrame implements MouseListener, MouseMotionListene
     public void setOtherWindowisOpen(boolean x) {
         this.otherWindowisOpen = x;
     }
+
+
 
     /////////////////////////////////////////////////////////////////////////////////////////
 

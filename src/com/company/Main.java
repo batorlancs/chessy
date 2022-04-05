@@ -42,6 +42,11 @@ public class Main {
         return calcPos(x,  y);
     }
 
+    public static boolean isPosInRange(int pos) {
+        if (pos < 0 || pos > 63) return false;
+        return true;
+    }
+
     // MAIN FUNCTION ///////////
     public static void main(String[] args) {
         frame = new MyFrame();

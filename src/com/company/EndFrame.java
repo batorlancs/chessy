@@ -66,6 +66,9 @@ public class EndFrame extends JFrame implements ActionListener, MouseListener {
         this.add(buttonRestart);
         this.add(buttonExit);
 
+        // freeze other window
+        Main.frame.setOtherWindowisOpen(true);
+
         this.setVisible(true);
     }
 
@@ -81,7 +84,7 @@ public class EndFrame extends JFrame implements ActionListener, MouseListener {
             System.exit(0);
         }
         if (e.getSource() == buttonRestart) {
-            Main.frame.setButtonsEnabled(true);
+            Main.frame.setOtherWindowisOpen(false);
             Main.frame.restartGame();
             Main.frame.refreshEverything();
             this.dispose();

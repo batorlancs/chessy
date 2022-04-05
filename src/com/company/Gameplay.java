@@ -211,6 +211,7 @@ public class Gameplay {
     // check if the player clicked on his own piece
     // --------------------------------------------------------------------------------------
     public boolean checkIfRightClick(int index) {
+        if (!Main.isPosInRange(index)) return false;
         int check;
         if (whiteTurn) check = 1;
         else check = 2;
@@ -228,13 +229,6 @@ public class Gameplay {
     public void displayBoard() {
         displayInt64Array(pieceCheck);
         displayInt64Array(colorCheck);
-    }
-
-    // --------------------------------------------------------------------------------------
-    // checks if the position is in range
-    // --------------------------------------------------------------------------------------
-    private boolean isInRange(int index) {
-        return (index >=0 && index<=63);
     }
 
     // --------------------------------------------------------------------------------------
@@ -295,7 +289,7 @@ public class Gameplay {
     // getting information about the piece in position
     // --------------------------------------------------------------------------------------
     public boolean isEnemyPieceThere(int index) {
-        if (!isInRange(index)) return false;
+        if (!Main.isPosInRange(index)) return false;
         if (whiteTurn && isPieceThere(index) && !isPieceWhite(index)) return true;
         if (!whiteTurn && isPieceThere(index) && isPieceWhite(index)) return true;
         return false;
@@ -303,7 +297,7 @@ public class Gameplay {
 
     // --------------------------------------------------------------------------------------
     public boolean isPieceThere(int index) {
-        if (!isInRange(index)) return false;
+        if (!Main.isPosInRange(index)) return false;
         return pieceCheck[index] != -1;
     }
 

@@ -56,7 +56,7 @@ public class PromoFrame extends JFrame implements ActionListener {
         }
 
         // disable all other buttons on the game frame (MyFrame Class)
-        Main.frame.setButtonsEnabled(false);
+        Main.frame.setOtherWindowisOpen(true);
 
         //add to frame
         this.add(panel);
@@ -71,7 +71,7 @@ public class PromoFrame extends JFrame implements ActionListener {
         for (int i = 0; i < 4; i++) {
             if (e.getSource() == buttons[i]) {
                 which = i+1;
-                Main.frame.setButtonsEnabled(true);
+                Main.frame.setOtherWindowisOpen(false);
                 Main.frame.callPromotion(index, which, isWhite);
                 Main.frame.refreshEverything();
                 this.setVisible(false);

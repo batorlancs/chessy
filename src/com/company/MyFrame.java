@@ -10,10 +10,12 @@ public class MyFrame extends JFrame implements MouseListener, MouseMotionListene
 
     // gui
     private JPanel panel = new JPanel();
-    private JButton[] buttons = new JButton[64];
+    //private JButton[] buttons = new JButton[64];
+    private JLabel[] buttons = new JLabel[64];
     private JLabel labelDrag = new JLabel();
-    boolean isDragging = false;
-    int whichButton = 0;
+    private boolean isDragging = false;
+    private int whichButton = 0;
+    private boolean otherWindowisOpen = false;
 
     // colors for displaying on the board
     public Color[] colors = new Color[64]; // basic color of the board
@@ -49,9 +51,10 @@ public class MyFrame extends JFrame implements MouseListener, MouseMotionListene
 
         //buttons setup
         for (int i = 0; i < 64; i++) {
-            buttons[i] = new JButton();
+            //buttons[i] = new JButton();
+            buttons[i] = new JLabel();
             buttons[i].setSize(80, 80);
-            buttons[i].setBorderPainted(false);
+            //buttons[i].setBorderPainted(false);
             buttons[i].setOpaque(true);
             //buttons[i].addActionListener(this);
             buttons[i].addMouseListener(this);
@@ -60,6 +63,7 @@ public class MyFrame extends JFrame implements MouseListener, MouseMotionListene
             buttons[i].setHorizontalAlignment(JButton.CENTER);
             panel.add(buttons[i]);
         }
+
 
         // drag label setup
         labelDrag.setSize(80, 80);
@@ -128,16 +132,6 @@ public class MyFrame extends JFrame implements MouseListener, MouseMotionListene
     private void refreshColorBoard() {
         for (int i = 0; i < 64; i++) {
             buttons[i].setBackground(colors[i]);
-        }
-    }
-
-    // --------------------------------------------------------------------------------------
-    // set all of the buttons enabled or disabled
-    // --------------------------------------------------------------------------------------
-    public void setButtonsEnabled(boolean x) {
-        for (JButton a: buttons) {
-            if (!x) a.setDisabledIcon(a.getIcon());
-            a.setEnabled(x);
         }
     }
 
@@ -336,68 +330,75 @@ public class MyFrame extends JFrame implements MouseListener, MouseMotionListene
 
     @Override
     public void mousePressed(MouseEvent e) {
-        System.out.println("clicked");
-        for (int i = 0; i < 64; i++) {
-            if (e.getSource() == buttons[i]) {
-                if (gameplay.checkIfRightClick(i)) {
-                    labelDrag.setIcon(buttons[i].getIcon());
-                    labelDrag.setVisible(true);
-                    whichButton = i;
-                    isDragging = true;
-                    labelDrag.setBounds(e.getX() + buttons[whichButton].getX() - 40, e.getY() + buttons[whichButton].getY() - 40, 80, 80);
-                    labelDrag.setVisible(true);
+        if (!otherWindowisOpen) {
+            System.out.println("clicked");
+            for (int i = 0; i < 64; i++) {
+                if (e.getSource() == buttons[i]) {
+                    // --------------------------------------------------------------------------
+                    // if player clicked/pressed on their own piece
+                    // --------------------------------------------------------------------------
+                    if (gameplay.checkIfRightClick(i)) {
+                        labelDrag.setIcon(buttons[i].getIcon());
+                        labelDrag.setVisible(true);
+                        whichButton = i;
+                        isDragging = true;
+                        labelDrag.setBounds(e.getX() + buttons[whichButton].getX() - 40, e.getY() + buttons[whichButton].getY() - 40, 80, 80);
+                        labelDrag.setVisible(true);
 
-                    refreshBoard();
-                    buttons[i].setBackground(stepColors[i]); //color click position
-                    lastClicked = i; // save click position
-                    gameplay.updateSteps();
-
-                    // display all the possible steps
-                    for (int num: gameplay.getPiece(i).getPossSteps()) {
-                        buttons[num].setBackground(stepColors[num]);
-                        buttons[num].setIcon(imageManager.getImageAnim(gameplay.getPieceWhich(num), gameplay.isPieceWhite(num)));
-                        if (num == getPassantStep() && getPassant() != -1 && gameplay.getPieceWhich(lastClicked) == 0)
-                            buttons[getPassant()].setIcon(imageManager.getImagePassant(gameplay.isPieceWhite(getPassant())));
-                        if (gameplay.getPieceWhich(num) == 1 && !gameplay.isEnemyPieceThere(num))
-                            buttons[num].setIcon(imageManager.getImageCastling(gameplay.isPieceWhite(num)));
-                    }
-                    buttons[i].setIcon(null);
-                }
-                if (lastClicked != -1 && !gameplay.checkIfRightClick(i)) {
-                    // if clicked to make a step (diff colored button and circle)
-                    if (buttons[i].getBackground() == stepColors[i]) {
-
-                        //kill if there is a figure
-                        if (gameplay.isEnemyPieceThere(i)) {
-                            gameplay.getPiece(i).killPiece();
-                            // kill if made en passant
-                        } else if (getPassantStep() == i && gameplay.getPieceWhich(lastClicked) == 0) {
-                            gameplay.getPiece(getPassant()).killPiece();
-                        }
-
-                        // move piece to clicked position
-                        gameplay.getPiece(lastClicked).move1(i);
-
-                        // refresh all arrays, update steps, switch turns, display refreshed
-                        refreshEverything();
+                        refreshBoard();
+                        buttons[i].setBackground(stepColors[i]); //color click position
+                        lastClicked = i; // save click position
                         gameplay.updateSteps();
-                        gameplay.switchTurn();
-                        //gameplay.displayBoard(); // debugging
 
-                        // show last steps when switching turns
-                        buttons[lastClicked].setBackground(lastColors[lastClicked]);
-                        buttons[i].setBackground(lastColors[i]);
+                        // display all the possible steps
+                        for (int num: gameplay.getPiece(i).getPossSteps()) {
+                            buttons[num].setBackground(stepColors[num]);
+                            buttons[num].setIcon(imageManager.getImageAnim(gameplay.getPieceWhich(num), gameplay.isPieceWhite(num)));
+                            if (num == getPassantStep() && getPassant() != -1 && gameplay.getPieceWhich(lastClicked) == 0)
+                                buttons[getPassant()].setIcon(imageManager.getImagePassant(gameplay.isPieceWhite(getPassant())));
+                            if (gameplay.getPieceWhich(num) == 1 && !gameplay.isEnemyPieceThere(num))
+                                buttons[num].setIcon(imageManager.getImageCastling(gameplay.isPieceWhite(num)));
+                        }
+                        buttons[i].setIcon(null);
 
-                        // check for special moves
-                        checkIfPassant(i);
-                        checkIfPromotion(i);
+                        // --------------------------------------------------------------------------
+                        // if last click was a piece and current click is not a friendly piece
+                        // --------------------------------------------------------------------------
+                    } else if (lastClicked != -1 && !gameplay.checkIfRightClick(i)) {
+                        // if clicked to make a step (diff colored button and circle)
+                        if (buttons[i].getBackground() == stepColors[i]) {
 
-                        lastClicked = -1; // reset
+                            //kill if there is a figure
+                            if (gameplay.isEnemyPieceThere(i)) {
+                                gameplay.getPiece(i).killPiece();
+                                // kill if made en passant
+                            } else if (getPassantStep() == i && gameplay.getPieceWhich(lastClicked) == 0) {
+                                gameplay.getPiece(getPassant()).killPiece();
+                            }
+
+                            // move piece to clicked position
+                            gameplay.getPiece(lastClicked).move1(i);
+
+                            // refresh all arrays, update steps, switch turns, display refreshed
+                            refreshEverything();
+                            gameplay.updateSteps();
+                            gameplay.switchTurn();
+                            //gameplay.displayBoard(); // debugging
+
+                            // show last steps when switching turns
+                            buttons[lastClicked].setBackground(lastColors[lastClicked]);
+                            buttons[i].setBackground(lastColors[i]);
+
+                            // check for special moves
+                            checkIfPassant(i);
+                            lastClicked = -1; // reset
+                            checkIfPromotion(i);
 
                         // if made an invalid move, cancelled move
-                    } else {
-                        buttons[lastClicked].setIcon(imageManager.getImage(gameplay.getPieceWhich(lastClicked), gameplay.isPieceWhite(lastClicked)));
-                        //lastClicked = -1;
+                        } else {
+                            refreshBoard();
+                            lastClicked = -1;
+                        }
                     }
                 }
             }
@@ -409,96 +410,101 @@ public class MyFrame extends JFrame implements MouseListener, MouseMotionListene
     @Override
     public void mouseReleased(MouseEvent e) {
 
-        int i = calcPosMouse();
+        if (!otherWindowisOpen) {
 
-        if (isDragging) {
-            System.out.println("released");
-            isDragging = false;
-            labelDrag.setVisible(false);
-        }
+            int i = calcPosMouse();
 
-        System.out.println(lastClicked + ", " + i);
+            if (isDragging) {
+                System.out.println("released");
+                isDragging = false;
+                labelDrag.setVisible(false);
+            }
 
-        if (lastClicked != -1 && !gameplay.checkIfRightClick(i)) {
+            System.out.println(lastClicked + ", " + i);
 
-            // if clicked to make a step (diff colored button and circle)
-            if (buttons[i].getBackground() == stepColors[i]) {
+            // --------------------------------------------------------------------------
+            // if last click was a piece and current click is not a friendly piece
+            // --------------------------------------------------------------------------
+            if (lastClicked != -1 && !gameplay.checkIfRightClick(i) && isPosInRange(i)) {
 
-                //kill if there is a figure
-                if (gameplay.isEnemyPieceThere(i)) {
-                    gameplay.getPiece(i).killPiece();
-                    // kill if made en passant
-                } else if (getPassantStep() == i && gameplay.getPieceWhich(lastClicked) == 0) {
-                    gameplay.getPiece(getPassant()).killPiece();
+                // if clicked to make a step (diff colored button and circle)
+                if (buttons[i].getBackground() == stepColors[i]) {
+
+                    //kill if there is a figure
+                    if (gameplay.isEnemyPieceThere(i)) {
+                        gameplay.getPiece(i).killPiece();
+                        // kill if made en passant
+                    } else if (getPassantStep() == i && gameplay.getPieceWhich(lastClicked) == 0) {
+                        gameplay.getPiece(getPassant()).killPiece();
+                    }
+
+                    // move piece to clicked position
+                    gameplay.getPiece(lastClicked).move1(i);
+
+                    // refresh all arrays, update steps, switch turns, display refreshed
+                    refreshEverything();
+                    gameplay.updateSteps();
+                    gameplay.switchTurn();
+                    //gameplay.displayBoard(); // debugging
+
+                    // show last steps when switching turns
+                    buttons[lastClicked].setBackground(lastColors[lastClicked]);
+                    buttons[i].setBackground(lastColors[i]);
+
+
+                    // check for special moves
+                    checkIfPassant(i);
+                    lastClicked = -1; // reset
+                    checkIfPromotion(i);
+
+                // if made an invalid move, cancelled move
+                } else {
+                    buttons[lastClicked].setIcon(imageManager.getImage(gameplay.getPieceWhich(lastClicked), gameplay.isPieceWhite(lastClicked)));
                 }
 
-                // move piece to clicked position
-                gameplay.getPiece(lastClicked).move1(i);
+            // --------------------------------------------------------------------------
+            // if clicked to make castling
+            // --------------------------------------------------------------------------
+            } else if (clickedCastling(lastClicked, i) && isPosInRange(i)) {
+
+                //this might be unnecessary
+                if (gameplay.getPieceWhich(lastClicked) == 5 && gameplay.getPieceWhich(i) == 1 && !gameplay.isEnemyPieceThere(i)) {
+                    if (calcPosx(lastClicked) > calcPosx(i)) {
+                        int castPos = calcPos(calcPosx(lastClicked) - 2, calcPosy(lastClicked));
+                        gameplay.getPiece(lastClicked).move1(castPos);
+                        gameplay.getPiece(i).move2(calcPosx(castPos) + 1, calcPosy(castPos));
+                    } else {
+                        int castPos = calcPos(calcPosx(lastClicked) + 2, calcPosy(lastClicked));
+                        gameplay.getPiece(lastClicked).move1(castPos);
+                        gameplay.getPiece(i).move2(calcPosx(castPos) - 1, calcPosy(castPos));
+                    }
+                }
 
                 // refresh all arrays, update steps, switch turns, display refreshed
                 refreshEverything();
                 gameplay.updateSteps();
                 gameplay.switchTurn();
-                //gameplay.displayBoard(); // debugging
+                //gameplay.displayBoard(); //debugging
 
                 // show last steps when switching turns
                 buttons[lastClicked].setBackground(lastColors[lastClicked]);
                 buttons[i].setBackground(lastColors[i]);
 
-                // check for special moves
-                checkIfPassant(i);
-                checkIfPromotion(i);
-
                 lastClicked = -1; // reset
 
-            // if made an invalid move, cancelled move
+            // --------------------------------------------------------------------------
+            // if not making a move
+            // --------------------------------------------------------------------------
             } else {
-                buttons[lastClicked].setIcon(imageManager.getImage(gameplay.getPieceWhich(lastClicked), gameplay.isPieceWhite(lastClicked)));
+                if (lastClicked != -1)
+                    buttons[lastClicked].setIcon(imageManager.getImage(gameplay.getPieceWhich(lastClicked), gameplay.isPieceWhite(lastClicked)));
             }
 
-        // --------------------------------------------------------------------------
-        // if clicked to make castling
-        // --------------------------------------------------------------------------
-        } else if (clickedCastling(lastClicked, i)) {
-
-            //this might be unnecessary
-            if (gameplay.getPieceWhich(lastClicked) == 5 && gameplay.getPieceWhich(i) == 1 && !gameplay.isEnemyPieceThere(i)) {
-                if (calcPosx(lastClicked) > calcPosx(i)) {
-                    int castPos = calcPos(calcPosx(lastClicked) - 2, calcPosy(lastClicked));
-                    gameplay.getPiece(lastClicked).move1(castPos);
-                    gameplay.getPiece(i).move2(calcPosx(castPos) + 1, calcPosy(castPos));
-                } else {
-                    int castPos = calcPos(calcPosx(lastClicked) + 2, calcPosy(lastClicked));
-                    gameplay.getPiece(lastClicked).move1(castPos);
-                    gameplay.getPiece(i).move2(calcPosx(castPos) - 1, calcPosy(castPos));
-                }
+            //check if game is over
+            if (gameplay.detectGameOver() != 0) {
+                //this.setButtonsEnabled(false);
+                new EndFrame(gameplay.detectGameOver()); // show end frame to restart, or exit
             }
-
-            // refresh all arrays, update steps, switch turns, display refreshed
-            refreshEverything();
-            gameplay.updateSteps();
-            gameplay.switchTurn();
-            //gameplay.displayBoard(); //debugging
-
-            // show last steps when switching turns
-            buttons[lastClicked].setBackground(lastColors[lastClicked]);
-            buttons[i].setBackground(lastColors[i]);
-
-            lastClicked = -1; // reset
-
-        // --------------------------------------------------------------------------
-        // if not making a move
-        // --------------------------------------------------------------------------
-        } else {
-            if (lastClicked == i) {
-                buttons[lastClicked].setIcon(imageManager.getImage(gameplay.getPieceWhich(lastClicked), gameplay.isPieceWhite(lastClicked)));
-            }
-        }
-
-        //check if game is over
-        if (gameplay.detectGameOver() != 0) {
-            this.setButtonsEnabled(false);
-            new EndFrame(gameplay.detectGameOver()); // show end frame to restart, or exit
         }
 
     }
@@ -517,7 +523,7 @@ public class MyFrame extends JFrame implements MouseListener, MouseMotionListene
     /////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (isDragging) {
+        if (isDragging && !otherWindowisOpen) {
             labelDrag.setBounds(e.getX() + buttons[whichButton].getX() - 40, e.getY() + buttons[whichButton].getY() - 40, 80, 80);
         }
     }
@@ -547,7 +553,9 @@ public class MyFrame extends JFrame implements MouseListener, MouseMotionListene
         this.passantStep = num;
     }
 
-
+    public void setOtherWindowisOpen(boolean x) {
+        this.otherWindowisOpen = x;
+    }
 
     /////////////////////////////////////////////////////////////////////////////////////////
 

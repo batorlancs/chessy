@@ -37,7 +37,8 @@ public class EndFrame extends JFrame implements ActionListener, MouseListener {
         label.setForeground(Main.fontcolor1);
         label.setFont(Main.font2);
         if (winner == 1) label.setText("congratulations player white, you won!");
-        else label.setText("congratulations player black, you won!");
+        else if (winner == 2) label.setText("congratulations player black, you won!");
+        else label.setText("it is a draw!");
 
         // create restart button
         buttonRestart.setBounds(0, 50, 200, 50);

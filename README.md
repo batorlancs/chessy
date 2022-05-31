@@ -14,3 +14,16 @@ For this project I only used Java with Java GUI to create the design, and struct
 <img src="https://user-images.githubusercontent.com/99259850/171140420-3b27430f-dc97-4c02-b8a9-50f003c8b115.jpg" width="500"/>
 <img src="https://user-images.githubusercontent.com/99259850/171140423-3ff86860-7b27-406f-bc55-660dc5270540.jpg" width="500"/>
 
+<b>TO RUN THE PROGRAM FROM THE TERMINAL DO THE FOLLOWING</b>
+1. go to the downloaded folder in the terminal
+2. <b>cd src</b> (enter folder src)
+3. <b>javac -d "your absolute path to the downloaded floder"/out/production/chessy com/company/*.java</b>
+(compile the program and put the class files in the out/production folder)
+4. go to out/production/chessy folder (<b>cd ..</b> then <b>cd out/production/chessy</b>)
+5. <b>java com/company/Main</b> (run the program)
+
+<b>if this didnt work simply compile in the folder</b>
+1. go to the downloaded folder in the terminal
+2. <b>cd src</b> (enter folder src)
+3. <b>javac com/company/*.java</b> (compile program)
+4. <b>java com/company/Main</b> (run program)

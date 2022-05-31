@@ -47,7 +47,7 @@ public class MoveList {
         public boolean isWhite() { return this.isWhite; }
         public boolean isCapture() { return this.isCapture; }
 
-        //see if the step is the same (same for back and forth)
+        //see if the step is the same (back and forth counts as same)
         public boolean equals(Rec a) {
             return (((this.from == a.getFrom() && this.to == a.getTo()) || (this.from == a.getTo() && this.to == a.getFrom())) && this.whichPiece == a.getWhichPiece() && this.isWhite == a.isWhite() && this.isCapture == a.isCapture());
         }

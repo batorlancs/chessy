@@ -3,6 +3,8 @@ a simple chess, that 2 players can play on the same computer. Drag & drop or cli
 
 For this project I only used Java with Java GUI to create the design, and structure.
 
+JAR executable file can be found at: out/artifacts/chessy_jar folder.
+
 <b>Here are some screenshots of the game:</b>
 
 <img src="https://user-images.githubusercontent.com/99259850/171140402-7902c86a-9bd7-4a70-893e-0ee0e427ce24.jpg" width="500"/>

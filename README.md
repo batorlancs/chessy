@@ -4,6 +4,7 @@ a simple chess, that 2 players can play on the same computer. Drag & drop or cli
 For this project I only used Java with Java GUI to create the design, and structure.
 
 JAR executable file can be found at: out/artifacts/chessy_jar folder.
+The source code can be found at: src/com/company folder.
 
 <b>Here are some screenshots of the game:</b>
 

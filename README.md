@@ -1,16 +1,16 @@
 # chess game
 a simple chess, that 2 players can play on the same computer. Drag & drop or click two times (select the piece then select move position) to move the pieces. The design was heavily inspired by 'chess.com'.
 
-Here are some screenshots.
+For this project I only used Java with Java GUI to create the design, and structure.
 
-![1](https://user-images.githubusercontent.com/99259850/171140402-7902c86a-9bd7-4a70-893e-0ee0e427ce24.jpg)
+<b>Here are some screenshots of the game:</b>
 
-<img src="https://user-images.githubusercontent.com/99259850/171140402-7902c86a-9bd7-4a70-893e-0ee0e427ce24.jpg" width="100"/>
+<img src="https://user-images.githubusercontent.com/99259850/171140402-7902c86a-9bd7-4a70-893e-0ee0e427ce24.jpg" width="500"/>
+<img src="https://user-images.githubusercontent.com/99259850/171140414-97b32561-2dad-4cce-a2fc-5c7a888a85f0.jpg" width="500"/>
 
-![2](https://user-images.githubusercontent.com/99259850/171140414-97b32561-2dad-4cce-a2fc-5c7a888a85f0.jpg)
+<b>Different colour themes. Press numbers to select and apply the theme. (0-3)</b>
 
-Different colour themes. Press numbers to select theme. (0-3)
+<img src="https://user-images.githubusercontent.com/99259850/171140419-79a92b1b-72d6-40c0-b046-7ed9a54186a1.jpg" width="500"/>
+<img src="https://user-images.githubusercontent.com/99259850/171140420-3b27430f-dc97-4c02-b8a9-50f003c8b115.jpg" width="500"/>
+<img src="https://user-images.githubusercontent.com/99259850/171140423-3ff86860-7b27-406f-bc55-660dc5270540.jpg" width="500"/>
 
-![3](https://user-images.githubusercontent.com/99259850/171140419-79a92b1b-72d6-40c0-b046-7ed9a54186a1.jpg)
-![4](https://user-images.githubusercontent.com/99259850/171140420-3b27430f-dc97-4c02-b8a9-50f003c8b115.jpg)
-![5](https://user-images.githubusercontent.com/99259850/171140423-3ff86860-7b27-406f-bc55-660dc5270540.jpg)
